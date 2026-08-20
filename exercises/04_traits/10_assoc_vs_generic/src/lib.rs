@@ -1,3 +1,5 @@
+use std::result;
+
 // TODO: Define a new trait, `Power`, that has a method `power` that raises `self`
 //  to the power of `n`.
 //  The trait definition and its implementations should be enough to get
@@ -12,6 +14,40 @@
 // interested in learning more about it.
 // You don't have to though: it's perfectly okay to write three separate
 // implementations manually. Venture further only if you're curious.
+//
+// j
+pub trait Power<RHS>  {
+    fn power(self, rhs: RHS) -> Self;
+}
+
+pub fn pow(base: u32, power: u32) -> u32 {
+    if power == 0 {
+        return 1;
+    }
+    let mut product: u32 = base;
+    for _ in 1..power as u32 {
+        product *= base;
+    }
+    product
+}
+
+impl Power<u16> for u32 {
+    fn power(self, rhs: u16) -> Self {
+        pow(self, rhs as u32)
+    }
+}
+
+impl Power<u32> for u32{
+    fn power(self, rhs: u32) -> Self {
+        pow(self, rhs )
+    }
+}
+
+impl Power<&u32> for u32 {
+    fn power(self, rhs: &u32) -> Self {
+        pow(self, *rhs)
+    }
+}
 
 #[cfg(test)]
 mod tests {
