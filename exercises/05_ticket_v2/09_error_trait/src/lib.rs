@@ -36,8 +36,10 @@ impl std::error::Error for TicketNewError {
 fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
     match Ticket::new(title.clone(), description, status.clone()) {
         Ok(ticket) => ticket,
-        Err(TicketNewError::TitleError(error_string)) => panic!("{}", error_string),
-        Err(TicketNewError::DescriptionError(_)) => Ticket::new(  title, "Description not provided".into(), status ).unwrap(),
+        Err(err) => match err {
+            TicketNewError::TitleError(_) => panic!("{err}"),
+            TicketNewError::DescriptionError(_) => Ticket::new(  title, "Description not provided".into(), status ).unwrap(),
+        }
     }
 }
 
