@@ -36,6 +36,16 @@ pub enum Status {
     InProgress,
     Done,
 }
+impl Ticket {
+    pub fn from_draft(ticket_id: TicketId, ticket_draf: TicketDraft) -> Self {
+        Self {
+            id: ticket_id,
+            title: ticket_draf.title,
+            description: ticket_draf.description,
+            status: Status::ToDo,
+        }
+    }
+}
 
 impl TicketStore {
     pub fn new() -> Self {
@@ -44,8 +54,17 @@ impl TicketStore {
         }
     }
 
-    pub fn add_ticket(&mut self, ticket: Ticket) {
-        self.tickets.push(ticket);
+    pub fn add_ticket(&mut self, ticket_draft: TicketDraft) -> TicketId {
+        let new_ticket_id: TicketId = TicketId(self.tickets.len() as u64);
+
+        self.tickets
+            .push(Ticket::from_draft(new_ticket_id, ticket_draft));
+        new_ticket_id
+    }
+
+    pub fn get(&self, ticket_id: TicketId) -> Option<&Ticket>{
+        let TicketId(index) = ticket_id;
+        self.tickets.get(index as usize)
     }
 }
 
